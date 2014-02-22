@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+	<html>
+		<head>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+
+		var socket = io.connect('http://localhost:8090');
+
+		socket.on('SerialEvent', function(data){
+			textDisplay.innerHTML=data;
+		});
+
+		</script>
+		</head>
+		<body>
+		And the latest value from the server is:
+		<div id="textDisplay">text will show up here</div>
+		</body>
+	</html>
