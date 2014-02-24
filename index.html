@@ -4,16 +4,133 @@
 		<script src="/socket.io/socket.io.js"></script>
 		<script>
 
+		var dataString;
+		var outputValue = false;
+
 		var socket = io.connect('http://localhost:8090');
 
 		socket.on('SerialEvent', function(data){
-			textDisplay.innerHTML=data;
+			// if (data contains "s1"){
+
+				dataString = data;
+				var parseString = dataString.split(" ");
+				console.log(parseString);
+
+			if (parseString[0] == 'a' ){
+				//console.log("s1 on")
+				console.log("top is empty");
+			}
+
+
+			if (parseString[0] == 'A' ){
+				//console.log("s1 on")
+				console.log("top is full");
+			}
+
+
+			if (parseString[1] == 'B' ){
+				//console.log("s2 on")
+				console.log("bottom is full");
+			}
+
+
+			if (parseString[1] == 'b' ){
+				//console.log("s1 on")
+				console.log("bottom is empty");
+			}
+
+
+			if (parseString[2] == 'x'){
+				
+				console.log('auto mode is off');
+				console.log('refill button on');
+			}
+
+			if (parseString[2] == 'X'){
+				//<button type="button" disabled>Refill Off</button>
+				console.log('auto mode is on');
+			}
+
+			if (parseString[3] == 'r'){
+				//ready to refill indicator light
+				console.log("not ready to refill");
+				//kill the button
+				// <button type="button" disabled>Refill Off</button>
+			}
+
+
+
+			if (parseString[3] == 'R'){
+				console.log("ready to refill in manual mode");
+				//ready to refill indicator light
+				//automode is off ready to be refilled
+			}
+
+
+			textDisplay1.innerHTML=parseString;
+			textDisplay2.innerHTML=data;
+			//console.log(data);
+
+
+			
 		});
+
+			
+			function refill(refilly){
+			//when button is pressed send data back to arduino\		
+				socket.emit('data', refilly);
+				console.log("sending R hopefully");
+
+			}
+
+
+			function auto(autoilly){
+			//when button is pressed send data back to arduino\		
+				socket.emit('data', autoilly);
+				console.log("sending X for auto on");
+
+			}
+
+			function toggle(button){
+				if(button.value == "REFILL"){
+					button.value = "REFILLING";
+					refill('R');
+				} else {
+					button.value = "REFILL";
+				}
+			}
+
+			function toggle2(button){
+				if(button.value == "AUTO OFF"){
+					button.value = "AUTO ON";
+					auto('X');
+				} else {
+					button.value = "AUTO OFF";
+					auto('Y');
+				}
+			}
+
+
 
 		</script>
 		</head>
 		<body>
-		And the latest value from the server is:
-		<div id="textDisplay">text will show up here</div>
+
+		<p>Click the button to refill tank manually</p>
+
+		<input type="button" id="1" value="REFILL" style="color:blue"
+       onclick="toggle(this)">
+
+       		<input type="button" id="2" value="AUTO ON" style="color:red"
+       onclick="toggle2(this)">
+
+
+       		
+
+		
+
+		<div id="textDisplay1">text1 will show up here</div>
+		<div id="textDisplay2">text2 will show up here</div>
 		</body>
+		
 	</html>

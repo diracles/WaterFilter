@@ -30,7 +30,20 @@ var serialport = require("serialport"),
 
 		arduino.on('data', function(data){
 			socket.emit("SerialEvent", data);
-			console.log(data);
+			//console.log(data);
+
+		});
+
+		//if the client presses refill button, send R back
+		socket.on('data', function(refilly) {
+			arduino.write(refilly);
+			console.log('client pressed refill button');
+
+		});
+
+		socket.on('data', function(autoilly) {
+			arduino.write(autoilly);
+			console.log('client turned auto mode on/off');
 
 		});
 
